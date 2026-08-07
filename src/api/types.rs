@@ -1,0 +1,116 @@
+use async_graphql::{SimpleObject, ID};
+use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
+
+#[derive(SimpleObject, Serialize, Deserialize, Clone, Debug)]
+pub struct Ledger {
+    pub sequence: i32,
+    pub hash: String,
+    pub close_time: DateTime<Utc>,
+    pub transaction_count: i32,
+    pub operation_count: i32,
+}
+
+#[derive(SimpleObject, Serialize, Deserialize, Clone, Debug)]
+pub struct Transaction {
+    pub id: ID,
+    pub hash: String,
+    pub ledger_sequence: i32,
+    pub source_account: String,
+    pub fee_paid: String,
+    pub operation_count: i32,
+    pub created_at: DateTime<Utc>,
+}
+
+#[derive(SimpleObject, Serialize, Deserialize, Clone, Debug)]
+pub struct Operation {
+    pub id: ID,
+    pub transaction_id: String,
+    pub source_account: String,
+    pub operation_type: String,
+    pub created_at: DateTime<Utc>,
+}
+
+#[derive(SimpleObject, Serialize, Deserialize, Clone, Debug)]
+pub struct Account {
+    pub id: ID,
+    pub sequence: String,
+    pub subentry_count: i32,
+    pub balances: Vec<Balance>,
+}
+
+#[derive(SimpleObject, Serialize, Deserialize, Clone, Debug)]
+pub struct Balance {
+    pub asset_type: String,
+    pub asset_code: Option<String>,
+    pub asset_issuer: Option<String>,
+    pub balance: String,
+}
+
+#[derive(SimpleObject, Serialize, Deserialize, Clone, Debug)]
+pub struct NetworkStats {
+    pub tps: f64,
+    pub total_accounts: i64,
+    pub total_transactions: i64,
+    pub ledger_count: i32,
+}
+
+#[derive(SimpleObject, Serialize, Deserialize, Clone, Debug)]
+pub struct AccountStats {
+    pub transaction_count: i32,
+    pub operation_count: i32,
+    pub total_volume_xlm: String,
+    pub last_active: DateTime<Utc>,
+}
+
+#[derive(SimpleObject, Serialize, Deserialize, Clone, Debug)]
+pub struct AssetVolume {
+    pub asset_code: String,
+    pub volume: String,
+    pub transaction_count: i32,
+    pub timeframe: String,
+}
+
+#[derive(SimpleObject, Serialize, Deserialize, Clone, Debug)]
+pub struct Portfolio {
+    pub total_net_worth: String,
+    pub positions: Vec<PositionSummary>,
+    pub risk_summary: RiskSummary,
+    pub yield_summary: YieldSummary,
+    pub last_updated: DateTime<Utc>,
+}
+
+#[derive(SimpleObject, Serialize, Deserialize, Clone, Debug)]
+pub struct PositionSummary {
+    pub module: String,
+    pub asset: String,
+    pub amount: String,
+    pub value_usd: String,
+    pub apy: Option<f64>,
+}
+
+#[derive(SimpleObject, Serialize, Deserialize, Clone, Debug)]
+pub struct RiskSummary {
+    pub health_factor: f64,
+    pub liquidation_risk: String,
+    pub concentration_risk: f64,
+}
+
+#[derive(SimpleObject, Serialize, Deserialize, Clone, Debug)]
+pub struct YieldSummary {
+    pub earned_ytd: String,
+    pub projected_annual: String,
+    pub average_apy: f64,
+}
+
+#[derive(SimpleObject, Serialize, Deserialize, Clone, Debug)]
+pub struct PoolHealth {
+    pub coverage_ratio_bps: i32,
+    pub concentration_bps: i32,
+    pub withdrawal_pressure_bps: i32,
+    pub reward_sustainability_bps: i32,
+    pub health_score: i32,
+    pub pool_size: String,
+    pub total_debt: String,
+    pub depositor_count: i32,
+}
